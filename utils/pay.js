@@ -1,17 +1,21 @@
 function wxpay(app, money, orderId, redirectUrl) {
+  let remark = "在线充值";
+  let nextAction = {};
+  if (orderId != 0) {
+    remark = "支付订单 ：" + orderId;
+    nextAction = { type: 0, id: orderId };
+  }
   wx.request({
     url: 'https://api.it120.cc/' + app.globalData.subDomain + '/pay/wxapp/get-pay-data',
     data: {
       token:app.globalData.token,
       money:money,
-      remark:"支付订单 ：" + orderId,
+      remark: remark,
       payName:"在线支付",
-      nextAction:{type:0, id:orderId}
+      nextAction: nextAction
     },
     //method:'POST',
     success: function(res){
-      console.log('api result:');
-      console.log(res.data);
       if(res.data.code == 0){
         // 发起支付
         wx.requestPayment({
